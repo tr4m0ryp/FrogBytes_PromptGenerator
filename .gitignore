@@ -1,0 +1,137 @@
+# FrogBytes - Git Ignore File
+# Prevents sensitive and temporary files from being committed
+
+# ===== SENSITIVE CONFIGURATION FILES =====
+# Never commit database credentials or sensitive config
+config/database.php
+.env
+.env.local
+.env.production
+
+# ===== SETUP AND DEPLOYMENT FILES =====
+# Remove these files after deployment for security
+setup_wizard.php
+validate_setup.php
+test_db.php
+deploy.sh
+
+# ===== BACKUP FILES =====
+# Database backups and temporary files
+*.sql.backup
+*.sql.bak
+backup_*.sql
+database_backup_*
+
+# ===== LOG FILES =====
+# Application and server logs
+*.log
+logs/
+error.log
+access.log
+php_errors.log
+
+# ===== TEMPORARY FILES =====
+# PHP and system temporary files
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== EDITOR AND IDE FILES =====
+# Various editor and IDE configuration files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-*
+
+# ===== CACHE AND SESSION FILES =====
+# PHP session and cache files
+/tmp/
+/cache/
+/sessions/
+*.cache
+
+# ===== VENDOR AND DEPENDENCIES =====
+# PHP Composer dependencies (if using Composer)
+/vendor/
+composer.lock
+
+# Node.js dependencies (if using npm/yarn)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ===== UPLOADS AND USER CONTENT =====
+# User uploaded files and generated content
+/uploads/
+/user-files/
+/media/
+
+# ===== SYSTEM FILES =====
+# Operating system generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== WEB SERVER FILES =====
+# Web server specific files that shouldn't be in repo
+.htaccess.bak
+.htpasswd
+.well-known/
+
+# ===== SSL CERTIFICATES =====
+# SSL certificates and private keys
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# ===== LOCAL DEVELOPMENT =====
+# Local development configuration
+config/local.php
+config/development.php
+.local
+local_*
+
+# ===== DOCUMENTATION BUILDS =====
+# Generated documentation
+/docs/build/
+/docs/_build/
+
+# ===== COMPRESSED FILES =====
+# Archive files (unless specifically needed)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ===== TESTING FILES =====
+# Test output and coverage reports
+/coverage/
+phpunit.xml
+.phpunit.result.cache
+
+# ===== SECURITY KEYS =====
+# Any security keys or tokens
+*.pem
+api_keys.txt
+secrets.txt
+tokens.txt
+
+# ===== CUSTOM EXCLUDES =====
+# Add any project-specific files to ignore below this line
+
+# Keep this comment - add custom ignores above

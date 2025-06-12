@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - FrogBytes</title>
+    <!-- Match the main site’s font (Inter) and styling -->
+    <link href="css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">    <style>
+        /* CSS Variables for theming */
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #0D1117;
+            --bg-secondary: #161B22;
+            --border-color: #30363D;
+            --text-primary: #C9D1D9;
+            --text-secondary: #8B949E;
+            --text-tertiary: #E0E0E0;
+            --accent-primary: #39FF14;
+            --accent-secondary: #32CD32;
+            --accent-tertiary: #00FF32;
+            --error-color: #FF8A80;
+            --success-color: #69F0AE;
+            --shadow-accent: rgba(57, 255, 20, 0.1);
+            --shadow-accent-hover: rgba(57, 255, 20, 0.3);
+            --glow-accent: rgba(57, 255, 20, 0.5);
+        }
+
+        /* Light theme */
+        body.light-theme {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F6F8FA;
+            --border-color: #D0D7DE;
+            --text-primary: #24292F;
+            --text-secondary: #656D76;
+            --text-tertiary: #24292F;
+            --accent-primary: #39FF14;
+            --accent-secondary: #32CD32;
+            --accent-tertiary: #00FF32;
+            --error-color: #DA3633;
+            --success-color: #28a745;
+            --shadow-accent: rgba(57, 255, 20, 0.1);
+            --shadow-accent-hover: rgba(57, 255, 20, 0.2);
+            --glow-accent: rgba(57, 255, 20, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            /* Subtle repeating pattern */
+            background-image: linear-gradient(45deg, rgba(20, 25, 35, 0.5) 25%, transparent 25%, transparent 75%, rgba(20, 25, 35, 0.5) 75%, rgba(20, 25, 35, 0.5)),
+                              linear-gradient(45deg, rgba(20, 25, 35, 0.5) 25%, transparent 25%, transparent 75%, rgba(20, 25, 35, 0.5) 75%, rgba(20, 25, 35, 0.5));
+            background-size: 6px 6px;
+            background-position: 0 0, 3px 3px;
+            margin: 0; 
+            padding: 0; 
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Light theme adjustments */
+        body.light-theme {
+            background-image: linear-gradient(45deg, rgba(200, 205, 215, 0.3) 25%, transparent 25%, transparent 75%, rgba(200, 205, 215, 0.3) 75%, rgba(200, 205, 215, 0.3)),
+                              linear-gradient(45deg, rgba(200, 205, 215, 0.3) 25%, transparent 25%, transparent 75%, rgba(200, 205, 215, 0.3) 75%, rgba(200, 205, 215, 0.3));
+        }
+
+        /* Simple top header */
+        .header {
+            background: var(--bg-secondary);
+            color: var(--text-tertiary);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--accent-primary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .header .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+        .header .logo a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .header .logo a:hover {
+            color: var(--accent-tertiary);
+        }
+        .header a {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }        .header a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Theme toggle button */
+        .icon-btn {
+            border: none;
+            cursor: pointer;
+            height: 36px;
+            width: 36px;
+            background: transparent !important;
+            color: var(--text-tertiary) !important;
+            transition: color 0.3s, background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        .icon-btn:hover {
+            background: var(--shadow-accent-hover) !important;
+            color: var(--accent-primary) !important;
+        }
+        .icon-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        #moon-icon, #sun-icon {
+            display: none;
+        }
+
+        /* Centered, card-like container */
+        .container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: var(--bg-secondary);
+            padding: 35px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px var(--shadow-accent);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+        .error {
+            color: var(--error-color);            margin-bottom: 15px; 
+            font-weight: 500; 
+            text-align: center;
+            background-color: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--error-color);
+        }
+        label {
+            display: block; 
+            margin: 18px 0 8px;
+            font-weight: 500; 
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%; 
+            padding: 12px;
+            box-sizing: border-box; 
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: var(--accent-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px var(--shadow-accent-hover);
+        }        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none; 
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover {
+            background: var(--accent-secondary);
+            box-shadow: 0 0 10px var(--glow-accent);
+        }
+        .link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .link a {
+            color: var(--accent-primary);
+            text-decoration: none; 
+            font-weight: 500;
+        }
+        .link a:hover {
+            text-decoration: underline;
+            color: var(--accent-tertiary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo"><a href="./index.htm">FrogBytes</a></div>
+    <div class="nav">
+        <button class="icon-btn" id="darkModeToggle">
+            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                <path d="M144.8 49.5C144.8 22.2 167 0 194.3 0s49.5 22.2 49.5 49.5v15.3c0 27.3-22.2 49.5-49.5 49.5s-49.5-22.2-49.5-49.5V49.5zM24 192c0-27.3 22.2-49.5 49.5-49.5h15.3c27.3 0 49.5 22.2 49.5 49.5s-22.2 49.5-49.5 49.5H73.5C46.2 241.5 24 219.3 24 192zm256 0c0-27.3 22.2-49.5 49.5-49.5H345c27.3 0 49.5 22.2 49.5 49.5s-22.2 49.5-49.5 49.5h-15.3c-27.3 0-49.5-22.2-49.5-49.5zM49.5 385.5C22.2 385.5 0 363.3 0 336s22.2-49.5 49.5-49.5h15.3c27.3 0 49.5 22.2 49.5 49.5s-22.2 49.5-49.5 49.5H49.5zM385.5 385.5c-27.3 0-49.5-22.2-49.5-49.5s22.2-49.5 49.5-49.5H401c27.3 0 49.5 22.2 49.5 49.5s-22.2 49.5-49.5 49.5h-15.5zM49.5 49.5C22.2 49.5 0 71.7 0 99s22.2 49.5 49.5 49.5h15.3c27.3 0 49.5-22.2 49.5-49.5S88.1 49.5 60.8 49.5H49.5zM385.5 49.5c-27.3 0-49.5 22.2-49.5 49.5s22.2 49.5 49.5 49.5H401c27.3 0 49.5-22.2 49.5-49.5S428.3 49.5 401 49.5h-15.5z"></path>
+            </svg>
+            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path d="M32 256c0-123.8 100.3-224 224-224s224 100.2 224 224-100.3 224-224 224S32 379.8 32 256zm224-64c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64z"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Sign Up</h1>
+    
+    <form action="signup.php" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required="">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required="">
+
+        <button type="submit">Create Account</button>
+    </form>    <div class="link">
+        Already have an account? <a href="login.php.html">Log In</a>
+    </div>
+</div>
+
+<script>
+// Theme management
+let isLightTheme = localStorage.getItem('frogbytes-theme') === 'light';
+let darkModeToggle;
+let moonIcon;
+let sunIcon;
+
+function applyTheme() {
+    if (isLightTheme) {
+        document.body.classList.add('light-theme');
+        if (moonIcon) moonIcon.style.display = 'block';
+        if (sunIcon) sunIcon.style.display = 'none';
+    } else {
+        document.body.classList.remove('light-theme');
+        if (moonIcon) moonIcon.style.display = 'none';
+        if (sunIcon) sunIcon.style.display = 'block';
+    }
+}
+
+function toggleTheme() {
+    isLightTheme = !isLightTheme;
+    localStorage.setItem('frogbytes-theme', isLightTheme ? 'light' : 'dark');
+    applyTheme();
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    darkModeToggle = document.getElementById('darkModeToggle');
+    moonIcon = document.getElementById('moon-icon');
+    sunIcon = document.getElementById('sun-icon');
+    
+    applyTheme();
+    
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleTheme);
+    }
+});
+</script>
+
+</body>
+</html>

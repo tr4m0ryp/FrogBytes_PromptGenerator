@@ -1,0 +1,405 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>FrogBytes's Prompt Helper</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3f51b5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        background: #f0f2f5;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      body.dark-mode {
+        background: #1e1e1e;
+        color: #fff;
+      }
+      /* Navbar (Header) */
+      #header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;  /* left: login, center: title, right: dark toggle */        padding: 15px;
+        background: #39FF14;
+        color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+      }
+      #header .nav-left a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 15px;
+      }
+      #header .nav-left span {
+        margin-right: 15px;
+      }
+      #header .nav-center {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .icon-btn {
+        border: none;
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        background: #39FF14 !important;
+        color: #fff !important;
+        transition: color 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+      }
+      .icon-btn:hover {
+        color: #ccc;
+      }
+      body.dark-mode .icon-btn {
+        color: #333;
+        background: #5c6bc0 !important;
+      }
+      body.dark-mode .icon-btn:hover {
+        color: #555;
+      }
+
+      /* Container + cards */
+      .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+      }
+      body.dark-mode .card {
+        background: #333333;
+      }
+      .card label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      /* Prompt selection area */
+      #system-prompt-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .prompt-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      select, button, textarea, input {
+        font-family: 'Inter', sans-serif;
+      }
+      #systemPromptSelect {
+        flex: 1;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        padding: 5px;
+        background: #fff;
+      }
+
+      /* We keep these hidden for now, as in original code: */
+      #system-prompt-actions { display: none; }
+      .system-prompt-edit-area { display: none; }
+
+      /* User prompt area */
+      #prompt-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      #prompt {
+        width: 100%;
+        height: 80px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        padding: 10px;
+        resize: vertical;
+        background: #fff;
+      }
+      body.dark-mode #prompt {
+        background: #333333;
+        color: #fff; /* ensure text is white in dark mode */
+      }
+
+      /* Drop area for files */
+      #drop-area {
+        background: #ffffff;
+        border: 2px dashed #bbb;
+        border-radius: 10px;
+        color: #666;
+        text-align: center;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 0.3s, background 0.3s;
+        margin-bottom: 20px;
+      }
+      body.dark-mode #drop-area {
+        background: #333333;
+        color: #fff;
+        border-color: #555;
+      }
+      #drop-area.hover {
+        border-color: #3f51b5;
+      }
+      #drop-area p {
+        margin: 10px 0 0 0;
+        line-height: 1.4;
+        font-size: 14px;
+      }
+      #drop-area svg {
+        fill: #888;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+      }
+
+      #buttons {
+        padding: 20px 0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      #output {
+        display: none;
+      }
+      #moon-icon, #sun-icon {
+        width: 16px;
+        height: 16px;
+        display: none;
+      }      .btn {
+        background: #39FF14;
+        color: #fff;
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background 0.3s;
+        line-height: normal;
+      }      .btn:hover {
+        background: #32CD32;
+      }
+      body.dark-mode .btn {
+        background: #39FF14;
+      }
+      body.dark-mode .btn:hover {
+        background: #32CD32;
+      }
+      
+      /* Collapsible section for adding/managing prompts */
+      .collapsible-container {
+        margin-bottom: 20px;
+      }
+      .collapsible-button {
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+      }
+      .collapsible-content {
+        display: none;
+        margin-top: 15px;
+      }
+      .user-prompts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-prompts-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Title left, delete button right */
+  margin-bottom: 8px;
+  background: #fafafa;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* Dark mode styling for the list items */
+body.dark-mode .user-prompts-list li {
+  background: #444;
+}
+
+/* The <strong> element for the prompt title takes remaining space */
+.user-prompts-list li strong {
+  flex: 1;
+  margin-right: 10px; /* small gap before the delete form */
+}
+
+.user-prompts-list form {
+  margin: 0; /* Remove default form margin so it aligns neatly */
+}
+
+/* Add-prompt form styling: labels on top, full-width fields, consistent look */
+.add-prompt-form label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block; /* Ensure label is on its own line */
+}
+
+.add-prompt-form input[type="text"],
+.add-prompt-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 8px;
+  margin-bottom: 10px;
+  background: #fff; /* match other fields */
+}
+
+body.dark-mode .add-prompt-form input[type="text"],
+body.dark-mode .add-prompt-form textarea {
+  background: #333;
+  border-color: #555;
+  color: #fff;
+}
+
+/* Make the Add Prompt button full-width */
+.add-prompt-form button {
+  width: 100%;
+}
+    </style>
+</head>
+<body>
+
+<!-- Header / Navbar -->
+<div id="header">
+  <!-- Left: login/signup or user info -->
+  <div class="nav-left">
+          <a href="login.php.html">Login</a>
+      <a href="signup.php.html">Sign Up</a>
+      </div>
+  <!-- Center: App Title -->
+  <div class="nav-center">
+    FrogBytes's Prompt Helper
+  </div>
+
+  <!-- Right: Dark Mode Toggle -->
+  <button class="icon-btn" id="darkModeToggle">
+    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 384 512">
+      <path fill="#ffffff" d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path>
+    </svg>
+    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512">
+      <path fill="#ffffff" d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path>
+    </svg>
+  </button>
+</div>
+
+<div class="container">
+  <!-- Expose the merged prompts (system + user) to the JS script -->
+  <script>
+    window.prompts = [];
+  </script>
+
+  <!-- Card: Prompt Selector -->
+  <div class="card" id="system-prompt-container">
+    <label for="systemPromptSelect">Select a system/user prompt (optional):</label>
+    <div class="prompt-row">
+      <select id="systemPromptSelect"></select>
+      <div id="system-prompt-actions">
+        <!-- Hidden: no direct add/update from UI here -->
+        <button class="btn" id="addBtn">Add</button>
+        <button class="btn" id="updateBtn">Update</button>
+      </div>
+    </div>
+    <div class="system-prompt-edit-area" id="editArea">
+      <textarea id="systemPromptTextarea"></textarea>
+      <div id="system-prompt-edit-buttons">
+        <button class="btn" id="saveBtn">Save</button>
+        <button class="btn" id="removeBtn" style="display:none;">Remove</button>
+        <button class="btn" id="cancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card: Enter a user prompt -->
+  <div class="card" id="prompt-container">
+    <label for="prompt">Enter a user prompt (will be placed after the selected prompt and above the file contents):</label>
+    <textarea id="prompt"></textarea>
+  </div>
+
+  <!-- Hidden file input for drop-area clicks -->
+  <input id="fileInput" type="file" multiple="" style="display: none;">
+
+  <!-- Card: Drop area -->
+  <div class="card" id="drop-area">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+      <path d="M19.35 10.04c.68 0 1.34.05 2 .13a9.994 9.994 0 0 0-1.98-6.88 9.99 9.99 0 0 0-7.87-2.22 7.48 7.48 0 0 0-7.38 9.09A7.52 7.52 0 0 0 7.52 20.9h10.93c3.24 0 5.85-2.61 5.85-5.85 0-3.09-2.4-5.61-5.43-5.99-.26-.03-.52-.04-.77-.02-.74.05-1.44.31-2 .7-.67.48-1.15 1.14-1.38 1.92-.25.82-.15 1.68.28 2.42.5.81 1.34 1.39 2.33 1.62 1.18.27 2.34-.21 2.98-1.18.59-.9.63-2.04.1-2.96-.5-.84-1.35-1.42-2.35-1.6a3.996 3.996 0 0 0-4.94 3.93c0 2.21 1.79 4 4 4H19.34z"></path>
+    </svg>
+    <p>Drag and drop your files here</p>
+    <p><small>The first file will be considered the root file</small></p>
+  </div>
+
+  <div id="buttons">
+    <button class="btn" id="clear-files">Clear Files</button>
+    <button class="btn" id="combine-copy">Combine & Copy</button>
+  </div>
+
+  <textarea id="output"></textarea>
+
+  <!-- If logged in, show a collapsible area for managing user prompts -->
+  
+</div>
+
+<!-- PDF.js from CDN (for PDF parsing) -->
+<script src="npm/pdfjs-dist%403.6.172/build/pdf.min.js"></script>
+
+<!-- Your main script (updated to handle allPrompts, etc.) -->
+<script src="script.js"></script>
+
+<script>
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registered.'))
+      .catch(err => console.log('Service Worker registration failed:', err));
+  }
+
+  // Simple collapsible toggle for "Manage Your Custom Prompts"
+  const toggleBtn = document.getElementById('togglePromptForm');
+  const collapsibleContent = document.getElementById('promptFormContent');
+  if (toggleBtn && collapsibleContent) {
+    toggleBtn.addEventListener('click', () => {
+      if (collapsibleContent.style.display === 'none' || collapsibleContent.style.display === '') {
+        collapsibleContent.style.display = 'block';
+      } else {
+        collapsibleContent.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
